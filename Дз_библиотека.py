@@ -61,7 +61,6 @@ def calculation_of_the_volume_of_triatomic_gases (CH, CO2):
   sum = 0
   m = 1 
   for value in CH:
-
     sum += m * value
     m += 1
     V0RO2 = 0.01 * (CO2 + sum) 
@@ -137,9 +136,6 @@ def all (alfa, name, Tg):
   return (Qnp, Vg, Hg0)
   
 def PV_RT (P=None, V=None, Tg=None):
-  P = input('Ввод давления: ')
-  V = input('Ввод объем: ')
-  Tg = input('Ввод температура: ')
   if (P):
     if (Tg):
       if (V):
@@ -158,6 +154,5 @@ def PV_RT (P=None, V=None, Tg=None):
     P = (R * Tg) / V
   return P, V, Tg
 
-PV_RT()
-
 print(all(3.313, "Астраханское", 450))
+print(PV_RT(12000, 25))
