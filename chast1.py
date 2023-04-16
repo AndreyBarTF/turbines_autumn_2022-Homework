@@ -49,6 +49,16 @@ def get_points(p_0, t_0, p_middle, t_middle, p_k, p_feed_water, t_feed_water, in
   point_feed_water = gas(P=p_feed_water * unit, T=to_kelvin(t_feed_water))
   return _point_0, point_0, point_1t, hp_heat_drop, point_1, _point_middle, point_middle, lp_heat_drop, point_2, point_2t, point_k_water, point_feed_water
 
+def get_coeff(p_0, t_0, p_middle, t_middle, p_k, t_feed_water, electrical_power, p_feed_water, internal_efficiency, mechanical_efficiency,generator_efficiency):
+  _point_0, point_0, point_1t, hp_heat_drop, point_1, _point_middle, point_middle, lp_heat_drop, point_2, point_2t, point_k_water, point_feed_water = get_points(p_0, t_0, p_middle, t_middle, p_k, p_feed_water, t_feed_water, internal_efficiency) 
+  coeff = (point_feed_water.T - point_2.T) / (to_kelvin(374.2) - point_2.T)
+  print("Коэффициент для нахождения коэффициента для расчета кси", coeff)
+  return coeff
+
+def coeff():
+  coef = float(input("Введите коэффициент с графика "))
+  return coef
+
 def get_ksi(p_0, t_0, p_middle, t_middle, p_k, t_feed_water, electrical_power, p_feed_water, internal_efficiency, mechanical_efficiency,generator_efficiency):
   _point_0, point_0, point_1t, hp_heat_drop, point_1, _point_middle, point_middle, lp_heat_drop, point_2, point_2t, point_k_water, point_feed_water = get_points(p_0, t_0, p_middle, t_middle, p_k, p_feed_water, t_feed_water, internal_efficiency)
   numenator_without = point_2.T * (_point_middle.s - point_k_water.s)
@@ -59,9 +69,9 @@ def get_ksi(p_0, t_0, p_middle, t_middle, p_k, t_feed_water, electrical_power, p
   denumenator_infinity = (point_0.h - point_1t.h) + (point_middle.h - point_feed_water.h)
   infinity_part = 1 - (numenator_infinity / denumenator_infinity)
 
-  ksi_infinity = 1 - (without_part / infinity_part)
-  coeff = (point_feed_water.T - point_2.T) / (to_kelvin(374.2) - point_2.T)
-  ksi = 0.83 * ksi_infinity
+  ksi_infinity = 1 - (without_part / infinity_part)  
+  coef = coeff()
+  ksi = coef * ksi_infinity
   return ksi
 
 #КПД
@@ -80,8 +90,7 @@ def get_eff(p_0, t_0, p_middle, t_middle, p_k, t_feed_water, electrical_power, p
 #Массовый расход в турбину на входе
 def get_inlet_mass_flow(p_0, t_0, p_middle, t_middle, p_k, t_feed_water, electrical_power, p_feed_water, internal_efficiency, mechanical_efficiency,generator_efficiency):
   _point_0, point_0, point_1t, hp_heat_drop, point_1, _point_middle, point_middle, lp_heat_drop, point_2, point_2t, point_k_water, point_feed_water = get_points(p_0, t_0, p_middle, t_middle, p_k, p_feed_water, t_feed_water, internal_efficiency)
-  ksi = get_ksi(p_0, t_0, p_middle, t_middle, p_k, t_feed_water, electrical_power, p_feed_water, internal_efficiency, mechanical_efficiency,generator_efficiency)
-
+    
   efficiency, estimated_heat_drop = get_eff(p_0, t_0, p_middle, t_middle, p_k, t_feed_water, electrical_power, p_feed_water, internal_efficiency, mechanical_efficiency,generator_efficiency)
   inlet_mass_flow = electrical_power / (estimated_heat_drop * 1000 * mechanical_efficiency * generator_efficiency)
   return inlet_mass_flow
@@ -96,6 +105,7 @@ def get_condenser_mass_flow(p_0, t_0, p_middle, t_middle, p_k, t_feed_water, ele
 def all(p_0, t_0, p_middle, t_middle, p_k, t_feed_water, electrical_power, p_feed_water, internal_efficiency, mechanical_efficiency,generator_efficiency):
   real_p0, real_p1t, real_p_middle = real_point(p_0, p_middle) 
   _point_0, point_0, point_1t, hp_heat_drop, point_1, _point_middle, point_middle, lp_heat_drop, point_2, point_2t, point_k_water, point_feed_water = get_points(p_0, t_0, p_middle, t_middle, p_k, p_feed_water, t_feed_water, internal_efficiency)
+  coeff = get_coeff(p_0, t_0, p_middle, t_middle, p_k, t_feed_water, electrical_power, p_feed_water, internal_efficiency, mechanical_efficiency,generator_efficiency)
   ksi = get_ksi(p_0, t_0, p_middle, t_middle, p_k, t_feed_water, electrical_power, p_feed_water, internal_efficiency, mechanical_efficiency,generator_efficiency)
   efficiency, estimated_heat_drop = get_eff(p_0, t_0, p_middle, t_middle, p_k, t_feed_water, electrical_power, p_feed_water, internal_efficiency, mechanical_efficiency,generator_efficiency)
   G_0 = get_inlet_mass_flow(p_0, t_0, p_middle, t_middle, p_k, t_feed_water, electrical_power, p_feed_water, internal_efficiency, mechanical_efficiency,generator_efficiency)
@@ -157,13 +167,13 @@ def plot_hs(points: list, ax):
     ax.plot(isobar_s, isobar_h, color="blue", label='Изобара')   
     ax.plot(isoterm_s, isoterm_h, color="red", label='Изотерма')
     ax.scatter(point.s, point.h,  s=40, color="yellow")
-    ax.legend()
-    ax.grid()
-    legend_without_duplicate_labels(ax)
     ax.set_xlabel(r"S, $\frac{кДж}{кг * K}$", fontsize=14)
     ax.set_ylabel(r"h, $\frac{кДж}{кг}$", fontsize=14)
     ax.set_title("HS-диаграмма процесса расширения", fontsize=18)
-    plt.show()
+    ax.legend()
+    
+    legend_without_duplicate_labels(ax)
+  ax.grid()  
        
 def plot_process(points, ax, **kwargs):
   ax.plot([point.s for point in  points], [point.h for point in points], **kwargs)
