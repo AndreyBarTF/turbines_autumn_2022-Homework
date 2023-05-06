@@ -52,10 +52,11 @@ def get_points(p_0, t_0, p_middle, t_middle, p_k, p_feed_water, t_feed_water, in
 def get_coeff(p_0, t_0, p_middle, t_middle, p_k, t_feed_water, electrical_power, p_feed_water, internal_efficiency, mechanical_efficiency,generator_efficiency):
   _point_0, point_0, point_1t, hp_heat_drop, point_1, _point_middle, point_middle, lp_heat_drop, point_2, point_2t, point_k_water, point_feed_water = get_points(p_0, t_0, p_middle, t_middle, p_k, p_feed_water, t_feed_water, internal_efficiency) 
   coeff = (point_feed_water.T - point_2.T) / (to_kelvin(374.2) - point_2.T)
-  print("Коэффициент для нахождения коэффициента для расчета кси", coeff)
+  print("Значение по оси абсцисс для расчета кси", coeff)
   return coeff
 
 def coeff():
+  print("Зная значение по оси абсцисс (ось x), определите значение по оси ординат (ось y), с учетом заданного количества подогревателей (z)")
   coef = float(input("Введите коэффициент с графика "))
   return coef
 
@@ -172,8 +173,7 @@ def plot_hs(points: list, ax):
     ax.set_title("HS-диаграмма процесса расширения", fontsize=18)
     ax.legend()
     
-    legend_without_duplicate_labels(ax)
-  ax.grid()  
+    legend_without_duplicate_labels(ax)   
        
 def plot_process(points, ax, **kwargs):
   ax.plot([point.s for point in  points], [point.h for point in points], **kwargs)
