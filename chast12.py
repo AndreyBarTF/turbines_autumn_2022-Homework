@@ -116,6 +116,20 @@ def all(p_0, t_0, p_middle, t_middle, p_k, t_feed_water, electrical_power, p_fee
   G_k = get_condenser_mass_flow(p_0, t_0, p_middle, t_middle, p_k, t_feed_water, electrical_power, p_feed_water, internal_efficiency, mechanical_efficiency,generator_efficiency)
   return real_p0, real_p1t, real_p_middle, _point_0, point_0, point_1t, hp_heat_drop, point_1, _point_middle, point_middle, lp_heat_drop, point_2, point_2t, point_k_water, point_feed_water, ksi, efficiency, estimated_heat_drop, G_0, G_k
 
+def data_output_points(point_0, point_1, point_middle, point_2):
+  d = {
+     'Name': ["point_0", "point_1", "point_middle", "point_2"],       
+     'P, МПа': [point_0.P, point_1.P, point_middle.P, point_2.P],
+     'T, K': [point_0.T, point_1.T, point_middle.T, point_2.T],
+     'h, кДж/кг': [point_0.h, point_1.h, point_middle.h, point_2.h],
+     'S, кДж/(кг * K)': [point_0.s, point_1.s, point_middle.s, point_2.s]
+  }
+  df = pd.DataFrame(data=d)
+  blankIndex=[''] * len(df)
+  df.index=blankIndex
+  display(df.transpose())
+  print()
+
 #Построение процесса расширения в турбине 
 def legend_without_duplicate_labels(ax: plt.Axes) -> None:
     """
@@ -650,11 +664,11 @@ def data_output11(H_i, internal_eff, N_i):
 
 #расчет на прочность для лопатки
 def calculation_of_strength(W2_min, b2, G_0, H_0, eff, l2, u, z_2, e_opt, rotation_speed, avg_diameter):
-  b2_atl = 25.6
+  b2_atl = 25.95
   W2_min_ = W2_min * m.pow(b2 / b2_atl, 3)
   sigma_bending = (G_0 * H_0 * 1000 * eff * l2) / (2 * u * z_2 * W2_min_ * e_opt)
   omega = 2 * m.pi * rotation_speed
-  sigma_stretching = 0.5 * 7800 * m.pow(omega, 2) * avg_diameter * l2
+  sigma_stretching = 0.5 * 7800 * m.pow(omega, 2) * avg_diameter * l2 / 10 ** 6
   return W2_min_, sigma_bending, omega, sigma_stretching
 
 def data_output12(W2_min_, sigma_bending, omega, sigma_stretching):
@@ -671,6 +685,28 @@ def data_output12(W2_min_, sigma_bending, omega, sigma_stretching):
   df.index=blankIndex
   display(df.transpose())
   print()
+
+def loss_points(G_0, H_0, ro, point_0, rotation_speed, avg_diameter, b2):
+  u = calculation_of_circumferential_speed(avg_diameter, rotation_speed)
+  Ho_c, Ho_p, h1t, c1t, a1t, M1t, F1_, point_1_t = calculation_of_parameters_for_the_nozzle(H_0, G_0, point_0, ro)       
+  alpha1_e, alpha0, t_opt, M1t_, b1, f1, I1_min ,W1_min = selection_of_the_nozzle_grating_profile()
+  el1, e_opt, l1, mu1, F1, z_1, t1opt, z1 = Clarification_nozzle_grating(c1t, G_0, F1_, avg_diameter, alpha1_e, b1, point_1_t)
+  alpha_ust, b1_l1, ksi_noz, ksi_sum, ksi_end_noz, fi, fi_, delta_fi, c_1, alpha_1 = Clarification_other_nozzle_grating_parameters(mu1, c1t, alpha1_e, t1opt, l1, b1)
+  w_1, beta_1, point_1_, point_2_t, w2t, l2, a2t, M2t, delta_Hc = calculation_of_parameters_for_the_selection_of_the_working_grid(l1, fi, c_1, c1t, alpha_1, u, point_1_t, Ho_p)
+  beta2_e, t_opt, M2t_, b2_atl, f2, I2_min, W2_min = selection_of_the_working_grid_profile()
+  mu2, F2, beta2_e, z_2, t2opt, beta2_ust, b2_l2 = specification_of_working_grid_parameters(e_opt, l2, b2, G_0, point_2_t, w2t, avg_diameter)
+  ksi_grid, ksi_sum_g, ksi_end_grid, psi, psi_, delta_psi, beta_2, c_2, alpha_2, w_2 = parameters_of_the_working_grid_according_to_the_atlas(u, beta2_e, b2, l2, w2t, mu2)
+  delta_Hp, delta_Hvc, E0, eff, eff_, delta_eff, point_2_, point_t_konec = calculation_of_relative_blade_efficiency(w_1, w_2, beta_1, beta_2, c_1, u, point_0, H_0, point_2_t, w2t, psi, c_2, delta_Hc, alpha_1, alpha_2)
+  cf, u_cf, u_cf_opt = calculation_of_the_velocity_ratio(u, H_0, fi, alpha_1, ro)   
+  peripheral_diameter, delta_r, delta_e, ksi_bandage, deltaH_y, ksi_friction, deltaH_tr, ksi_v, B2, ksi_segment, ksi_partiality, deltaH_partiality = determination_of_parameters_for_calculating_internal_efficiency(beta2_ust, b2, e_opt, alpha1_e, avg_diameter, l2, eff, F1, ro, E0, u_cf)
+  x_vc = 0
+  h2 = point_2_t.h + delta_Hp
+
+  point_H1 = gas(P = point_2_t.P, h = h2 + deltaH_tr)
+  point_H2 = gas(P = point_2_t.P, h = h2 + deltaH_tr + deltaH_partiality)
+  point_H3 = gas(P = point_2_t.P, h = h2 + deltaH_tr + deltaH_partiality + deltaH_y)
+  point_H4 = gas(P = point_2_t.P, h = h2 + deltaH_tr + deltaH_partiality + deltaH_y + ((1 - x_vc) * delta_Hvc))
+  return point_H1, point_H2, point_H3, point_H4
 
 def main(G_0, H_0, ro, point_0, rotation_speed, avg_diameter, b2):
   u = calculation_of_circumferential_speed(avg_diameter, rotation_speed)
@@ -724,8 +760,22 @@ def graff(G_0, H_0, ro, point_0, rotation_speed, avg_diameter, b2):
   ksi_grid, ksi_sum_g, ksi_end_grid, psi, psi_, delta_psi, beta_2, c_2, alpha_2, w_2 = parameters_of_the_working_grid_according_to_the_atlas(u, beta2_e, b2, l2, w2t, mu2)
   delta_Hp, delta_Hvc, E0, eff, eff_, delta_eff, point_2_, point_t_konec = calculation_of_relative_blade_efficiency(w_1, w_2, beta_1, beta_2, c_1, u, point_0, H_0, point_2_t, w2t, psi, c_2, delta_Hc, alpha_1, alpha_2)
   cf, u_cf, u_cf_opt = calculation_of_the_velocity_ratio(u, H_0, fi, alpha_1, ro)
-  return point_1_t, point_1_, point_2_t, point_2_, point_t_konec
+  point_H1, point_H2, point_H3, point_H4 = loss_points(G_0, H_0, ro, point_0, rotation_speed, avg_diameter, b2)
+  return point_1_t, point_1_, point_2_t, point_2_, point_t_konec, point_H1, point_H2, point_H3, point_H4
   
+def data_output_points_reg(point_0, point_1_, point_2_, point_t_konec):
+  d = {
+     'Name': ["point_0", "point_1_", "point_2_", "point_t_konec"],       
+     'P, МПа': [point_0.P, point_1_.P, point_2_.P, point_t_konec.P],
+     'T, K': [point_0.T, point_1_.T, point_2_.T, point_t_konec.T],
+     'h, кДж/кг': [point_0.h, point_1_.h, point_2_.h, point_t_konec.h],
+     'S, кДж/(кг * K)': [point_0.s, point_1_.s, point_2_.s, point_t_konec.s]
+  }
+  df = pd.DataFrame(data=d)
+  blankIndex=[''] * len(df)
+  df.index=blankIndex
+  display(df.transpose())
+  print()
 
 def endurance(G_0, H_0, ro, point_0, rotation_speed, avg_diameter, b2):
   u = calculation_of_circumferential_speed(avg_diameter, rotation_speed)
@@ -740,7 +790,6 @@ def endurance(G_0, H_0, ro, point_0, rotation_speed, avg_diameter, b2):
   delta_Hp, delta_Hvc, E0, eff, eff_, delta_eff, point_2_, point_t_konec = calculation_of_relative_blade_efficiency(w_1, w_2, beta_1, beta_2, c_1, u, point_0, H_0, point_2_t, w2t, psi, c_2, delta_Hc, alpha_1, alpha_2)
   cf, u_cf, u_cf_opt = calculation_of_the_velocity_ratio(u, H_0, fi, alpha_1, ro)     
   data_output12(*calculation_of_strength(W2_min, b2, G_0, H_0, eff, l2, u, z_2, e_opt, rotation_speed, avg_diameter))
-
 
 #опеределение числа ступеней 
 def determination_of_the_number_of_steps(G_0, real_p0, point_0, avg_diameter, ro, rotation_speed, H_0, b2, on):
@@ -757,24 +806,25 @@ def determination_of_the_number_of_steps(G_0, real_p0, point_0, avg_diameter, ro
   cf, u_cf, u_cf_opt = calculation_of_the_velocity_ratio(u, H_0, fi, alpha_1, ro)
   peripheral_diameter, delta_r, delta_e, ksi_bandage, deltaH_y, ksi_friction, deltaH_tr, ksi_v, B2, ksi_segment, ksi_partiality, deltaH_partiality = determination_of_parameters_for_calculating_internal_efficiency(beta2_ust, b2, e_opt, alpha1_e, avg_diameter, l2, eff, F1, ro, E0, u_cf)    
   H_i, internal_eff, N_i = calculation_of_internal_relative_efficiency(G_0, E0, delta_Hc, delta_Hp, delta_Hvc, deltaH_y, deltaH_tr, deltaH_partiality)
+  point_1_t, point_1_, point_2_t, point_2_, point_t_konec, point_H1, point_H2, point_H3, point_H4 = graff(G_0, H_0, ro, point_0, rotation_speed, avg_diameter, b2)
 
   speed_stage_diam = avg_diameter
   rotation_speed = 50
-  n_stages = 14
+  n_stages = 11
   mass_flow = G_0 
 
-  p0 = real_p0
-  h0 = point_0.h # kJ/kg
+  p0 = point_t_konec
+  h0 = point_t_konec.h # kJ/kg
   pz = 3.34 * MPa 
 
   # Techincal params
   delta_diam = 0.2
-  speed_coefficient = fi #0.961249	#fi
+  speed_coefficient = fi 
   alpha_1 = 15
   root_reaction_degree = 0.05
   discharge_coefficient = 0.96
 
-  efficiency = internal_eff #0.734707	#internal_eff #internal_eff
+  efficiency = internal_eff 
 
   avg_diam_1 = speed_stage_diam - delta_diam
 
@@ -795,8 +845,8 @@ def determination_of_the_number_of_steps(G_0, real_p0, point_0, avg_diameter, ro
   heat_drop_1 = get_heat_drop(avg_diam_1, u_cf_1)
   h1 = point_0.h - heat_drop_1
   point_2 = gas(h=h1, s=point_0.s)
-  blade_length_1 = l1 #0.042794	#l1 #расчитано не нужно l1
-  blade_length_2 = l2 #0.046794 #l2 #расчитано не нужно l2
+  blade_length_1 = l1 
+  blade_length_2 = l2 
 
   root_diameter = avg_diam_1 - blade_length_2
   if(on):
@@ -857,7 +907,7 @@ def determination_of_the_number_of_steps(G_0, real_p0, point_0, avg_diameter, ro
 
   def plot_distribution(values, ax_name):
     fig, ax = plt.subplots(1, 1, figsize=(15,5))
-    ax.plot(range(1, 15), values,  marker='o')
+    ax.plot(range(1, 12), values,  marker='o')
     ax.set_xlabel("Номер ступени")
     ax.set_ylabel(ax_name)
     ax.grid()
@@ -959,15 +1009,16 @@ def vibration_diagram(G_0, H_0, ro, point_0, rotation_speed, avg_diameter, b2, r
   ax.set_title("Вибрационная диаграмма");  
 
 #расчет на прочность для диска
-def disk_strength():
+def disk_strength(G_0, H_0, ro, point_0, rotation_speed, avg_diameter, b2, real_p0):
+  avg_diam_1, blade_length_z, avg_diam_2, root_diameter = determination_of_the_number_of_steps(G_0, real_p0, point_0, avg_diameter, ro, rotation_speed, H_0, b2, False)
+
   MPa = 1e6
   kW = 1e3
   MW = 1e6
   nu = 0.3
-  #r1 = 0.22 #уточнить где брать !!
-  #r2 = 0.560 #уточнить где брать !!
-  r1 = float(input())
-  r2 = float(input())
+  r1 = 0 
+  r2 = root_diameter / 2 
+
   sigma_1 = 0
   sigma_2 = 100 * MPa
   density = 7800
@@ -997,11 +1048,11 @@ def Determination_of_critical_rotor_speeds():
   density = 7800
 
   L = 4.999
-  L_rotor = 5.81
+  L_rotor = 5.80
   d = 0.56
   d_0 = 0.1
 
-  rotor_mass = 13522
+  rotor_mass = 11799
 
   EI = E * np.pi * (d ** 4 - d_0 ** 4) / 64
   EI
