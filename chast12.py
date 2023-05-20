@@ -238,26 +238,25 @@ def selection_of_the_nozzle_grating_profile():
   alpha0 = 90
   alpha1_e = 15
   t_opt = [0.70,0.85] 
-  M1t_ = 0.85
+  #M1t_ = 0.85
   b1 = 100
-  f1 = 3.3
-  I1_min = 0.36
-  W1_min = 0.45
-  return alpha1_e, alpha0, t_opt, M1t_, b1, f1, I1_min ,W1_min
+  f1 = 3.3 # см^2 далее где необхожимо осуществлен перевод едениц измерения
+  I1_min = 0.36 # см^4 далее где необхожимо осуществлен перевод едениц измерения
+  W1_min = 0.45 # см^3 далее где необхожимо осуществлен перевод едениц измерения
+  return alpha1_e, alpha0, t_opt, b1, f1, I1_min ,W1_min
 
 #вывод параметров в табличном виде
-def data_output1(alpha1_e, alpha0, t_opt, M1t_, b1, f1, I1_min, W1_min):
+def data_output1(alpha1_e, alpha0, t_opt, b1, f1, I1_min, W1_min):
   d = {
      'Name': ["Угол выхода потока из решётки", 
               "Угол входа потока в решётку", 
               "Диапазон для ", 
-              "Число Маха предварительное", 
               "Хорда сопловой решётки", 
               "Площадь поперечного сечения сопловой решётки", 
               "Момент инерции сопловой решётки", 
               "Момент сопротивления сопловой решётки"],
-     'Parameters': ["alpha1_e", "alpha0", "t_opt", "M1t_", "b1", "f1", "I1_min", "W1_min"],
-     'Value': [alpha1_e, alpha0, t_opt, M1t_, b1, f1, I1_min, W1_min]
+     'Parameters': ["alpha1_e", "alpha0", "t_opt", "b1", "f1", "I1_min", "W1_min"],
+     'Value': [alpha1_e, alpha0, t_opt, b1, f1, I1_min, W1_min]
   }
   df = pd.DataFrame(data=d)
   blankIndex=[''] * len(df)
@@ -373,25 +372,24 @@ def data_output4(w_1, beta_1, point_1_, point_2_t, w2t, l2, a2t, M2t, delta_Hc):
 def selection_of_the_working_grid_profile():
   beta2_e = 22 #19-24
   t_opt = [0.58,0.68]
-  M2t_ = 0.9
+  #M2t_ = 0.9
   b2_atl = 25.95    
-  f2 = 1.85
-  I2_min = 0.205
-  W2_min = 0.324
-  return beta2_e, t_opt, M2t_, b2_atl, f2, I2_min, W2_min
+  f2 = 1.85 # см^2 далее где необхожимо осуществлен перевод едениц измерения
+  I2_min = 0.205 # см^4 далее где необхожимо осуществлен перевод едениц измерения
+  W2_min = 0.324 # см^3 далее где необхожимо осуществлен перевод едениц измерения
+  return beta2_e, t_opt, b2_atl, f2, I2_min, W2_min
 
-def data_output5(beta2_e, t_opt, M2t_, b2_atl, f2, I2_min, W2_min):
+def data_output5(beta2_e, t_opt, b2_atl, f2, I2_min, W2_min):
   d = {
      'Name': [ 
               "Угол выхода потока из рабочей решётки по атласу", 
-              "Оптимальный шаг рабочей решётки", 
-              "Число Маха предварительное", 
+              "Оптимальный шаг рабочей решётки",  
               "Хорда рабочей решётки по атласу", 
               "Площадь поперечного сечения рабочей решётки", 
               "Момент инерции рабочей решётки", 
               "Момент сопротивления рабочей решётки"],       
-     'Parameters': ["beta2_e", "t_opt", "M2t_", "b2_atl", "f2", "I2_min", "W2_min"],
-     'Value': [beta2_e, t_opt, M2t_, b2_atl, f2, I2_min, W2_min]
+     'Parameters': ["beta2_e", "t_opt", "b2_atl", "f2", "I2_min", "W2_min"],
+     'Value': [beta2_e, t_opt, b2_atl, f2, I2_min, W2_min]
   }
   df = pd.DataFrame(data=d)
   blankIndex=[''] * len(df)
@@ -441,7 +439,10 @@ def parameters_of_the_working_grid_according_to_the_atlas(u, beta2_e, b2, l2, w2
   w_2 = w2t * psi
   beta_2 = m.degrees(m.asin((mu2 / psi) * m.sin(m.radians(beta2_e))))
   c_2 = m.sqrt(w_2 ** 2 + u ** 2 - 2 * w_2 * u * m.cos(m.radians(beta_2)))
-  alpha_2 = m.degrees(m.atan((m.sin(m.radians(beta_2))) / (m.cos(m.radians(beta_2)) - u / w_2)))
+  #alpha_2 = m.degrees(m.atan((m.sin(m.radians(beta_2))) / (m.cos(m.radians(beta_2)) - u / w_2)))
+
+  alpha_2 = m.degrees(m.acos(1 / m.sqrt(1 + ((m.sin(m.radians(beta_2))) / (m.cos(m.radians(beta_2)) - u / w_2))**2)))
+
   return ksi_grid, ksi_sum_g, ksi_end_grid, psi, psi_, delta_psi, beta_2, c_2, alpha_2, w_2
 
 def data_output7(ksi_grid, ksi_sum_g, ksi_end_grid, psi, psi_, delta_psi, beta_2, c_2, alpha_2, w_2):
@@ -552,11 +553,11 @@ def efficiency_graph_from_U_cf_and_avg_diameter(G_0, H_0, ro, point_0, rotation_
     avg_diameter = d_value_
     u = calculation_of_circumferential_speed(avg_diameter, rotation_speed)
     Ho_c, Ho_p, h1t, c1t, a1t, M1t, F1_, point_1_t = calculation_of_parameters_for_the_nozzle(H_0, G_0, point_0, ro)       
-    alpha1_e, alpha0, t_opt, M1t_, b1, f1, I1_min ,W1_min = selection_of_the_nozzle_grating_profile()
+    alpha1_e, alpha0, t_opt, b1, f1, I1_min ,W1_min = selection_of_the_nozzle_grating_profile()
     el1, e_opt, l1, mu1, F1, z_1, t1opt, z1 = Clarification_nozzle_grating(c1t, G_0, F1_, avg_diameter, alpha1_e, b1, point_1_t)
     alpha_ust, b1_l1, ksi_noz, ksi_sum, ksi_end_noz, fi, fi_, delta_fi, c_1, alpha_1 = Clarification_other_nozzle_grating_parameters(mu1, c1t, alpha1_e, t1opt, l1, b1)
     w_1, beta_1, point_1_, point_2_t, w2t, l2, a2t, M2t, delta_Hc = calculation_of_parameters_for_the_selection_of_the_working_grid(l1, fi, c_1, c1t, alpha_1, u, point_1_t, Ho_p)
-    beta2_e, t_opt, M2t_, b2, f2, I2_min, W2_min = selection_of_the_working_grid_profile()
+    beta2_e, t_opt, b2, f2, I2_min, W2_min = selection_of_the_working_grid_profile()
     mu2, F2, beta2_e, z_2, t2opt, beta2_ust, b2_l2 = specification_of_working_grid_parameters(e_opt, l2, b2, G_0, point_2_t, w2t, avg_diameter)
     ksi_grid, ksi_sum_g, ksi_end_grid, psi, psi_, delta_psi, beta_2, c_2, alpha_2, w_2 = parameters_of_the_working_grid_according_to_the_atlas(u, beta2_e, b2, l2, w2t, mu2)
     delta_Hp, delta_Hvc, E0, eff, eff_, delta_eff, point_2_, point_t_konec = calculation_of_relative_blade_efficiency(w_1, w_2, beta_1, beta_2, c_1, u, point_0, H_0, point_2_t, w2t, psi, c_2, delta_Hc, alpha_1, alpha_2)
@@ -689,11 +690,11 @@ def data_output12(W2_min_, sigma_bending, omega, sigma_stretching):
 def loss_points(G_0, H_0, ro, point_0, rotation_speed, avg_diameter, b2):
   u = calculation_of_circumferential_speed(avg_diameter, rotation_speed)
   Ho_c, Ho_p, h1t, c1t, a1t, M1t, F1_, point_1_t = calculation_of_parameters_for_the_nozzle(H_0, G_0, point_0, ro)       
-  alpha1_e, alpha0, t_opt, M1t_, b1, f1, I1_min ,W1_min = selection_of_the_nozzle_grating_profile()
+  alpha1_e, alpha0, t_opt, b1, f1, I1_min ,W1_min = selection_of_the_nozzle_grating_profile()
   el1, e_opt, l1, mu1, F1, z_1, t1opt, z1 = Clarification_nozzle_grating(c1t, G_0, F1_, avg_diameter, alpha1_e, b1, point_1_t)
   alpha_ust, b1_l1, ksi_noz, ksi_sum, ksi_end_noz, fi, fi_, delta_fi, c_1, alpha_1 = Clarification_other_nozzle_grating_parameters(mu1, c1t, alpha1_e, t1opt, l1, b1)
   w_1, beta_1, point_1_, point_2_t, w2t, l2, a2t, M2t, delta_Hc = calculation_of_parameters_for_the_selection_of_the_working_grid(l1, fi, c_1, c1t, alpha_1, u, point_1_t, Ho_p)
-  beta2_e, t_opt, M2t_, b2_atl, f2, I2_min, W2_min = selection_of_the_working_grid_profile()
+  beta2_e, t_opt, b2_atl, f2, I2_min, W2_min = selection_of_the_working_grid_profile()
   mu2, F2, beta2_e, z_2, t2opt, beta2_ust, b2_l2 = specification_of_working_grid_parameters(e_opt, l2, b2, G_0, point_2_t, w2t, avg_diameter)
   ksi_grid, ksi_sum_g, ksi_end_grid, psi, psi_, delta_psi, beta_2, c_2, alpha_2, w_2 = parameters_of_the_working_grid_according_to_the_atlas(u, beta2_e, b2, l2, w2t, mu2)
   delta_Hp, delta_Hvc, E0, eff, eff_, delta_eff, point_2_, point_t_konec = calculation_of_relative_blade_efficiency(w_1, w_2, beta_1, beta_2, c_1, u, point_0, H_0, point_2_t, w2t, psi, c_2, delta_Hc, alpha_1, alpha_2)
@@ -711,11 +712,11 @@ def loss_points(G_0, H_0, ro, point_0, rotation_speed, avg_diameter, b2):
 def main(G_0, H_0, ro, point_0, rotation_speed, avg_diameter, b2):
   u = calculation_of_circumferential_speed(avg_diameter, rotation_speed)
   Ho_c, Ho_p, h1t, c1t, a1t, M1t, F1_, point_1_t = calculation_of_parameters_for_the_nozzle(H_0, G_0, point_0, ro)       
-  alpha1_e, alpha0, t_opt, M1t_, b1, f1, I1_min ,W1_min = selection_of_the_nozzle_grating_profile()
+  alpha1_e, alpha0, t_opt, b1, f1, I1_min ,W1_min = selection_of_the_nozzle_grating_profile()
   el1, e_opt, l1, mu1, F1, z_1, t1opt, z1 = Clarification_nozzle_grating(c1t, G_0, F1_, avg_diameter, alpha1_e, b1, point_1_t)
   alpha_ust, b1_l1, ksi_noz, ksi_sum, ksi_end_noz, fi, fi_, delta_fi, c_1, alpha_1 = Clarification_other_nozzle_grating_parameters(mu1, c1t, alpha1_e, t1opt, l1, b1)
   w_1, beta_1, point_1_, point_2_t, w2t, l2, a2t, M2t, delta_Hc = calculation_of_parameters_for_the_selection_of_the_working_grid(l1, fi, c_1, c1t, alpha_1, u, point_1_t, Ho_p)
-  beta2_e, t_opt, M2t_, b2_atl, f2, I2_min, W2_min = selection_of_the_working_grid_profile()
+  beta2_e, t_opt, b2_atl, f2, I2_min, W2_min = selection_of_the_working_grid_profile()
   mu2, F2, beta2_e, z_2, t2opt, beta2_ust, b2_l2 = specification_of_working_grid_parameters(e_opt, l2, b2, G_0, point_2_t, w2t, avg_diameter)
   ksi_grid, ksi_sum_g, ksi_end_grid, psi, psi_, delta_psi, beta_2, c_2, alpha_2, w_2 = parameters_of_the_working_grid_according_to_the_atlas(u, beta2_e, b2, l2, w2t, mu2)
   delta_Hp, delta_Hvc, E0, eff, eff_, delta_eff, point_2_, point_t_konec = calculation_of_relative_blade_efficiency(w_1, w_2, beta_1, beta_2, c_1, u, point_0, H_0, point_2_t, w2t, psi, c_2, delta_Hc, alpha_1, alpha_2)
@@ -735,11 +736,11 @@ def main(G_0, H_0, ro, point_0, rotation_speed, avg_diameter, b2):
 def main2(G_0, H_0, ro, point_0, rotation_speed, avg_diameter, b2):
   u = calculation_of_circumferential_speed(avg_diameter, rotation_speed)
   Ho_c, Ho_p, h1t, c1t, a1t, M1t, F1_, point_1_t = calculation_of_parameters_for_the_nozzle(H_0, G_0, point_0, ro)       
-  alpha1_e, alpha0, t_opt, M1t_, b1, f1, I1_min ,W1_min = selection_of_the_nozzle_grating_profile()
+  alpha1_e, alpha0, t_opt, b1, f1, I1_min ,W1_min = selection_of_the_nozzle_grating_profile()
   el1, e_opt, l1, mu1, F1, z_1, t1opt, z1 = Clarification_nozzle_grating(c1t, G_0, F1_, avg_diameter, alpha1_e, b1, point_1_t)
   alpha_ust, b1_l1, ksi_noz, ksi_sum, ksi_end_noz, fi, fi_, delta_fi, c_1, alpha_1 = Clarification_other_nozzle_grating_parameters(mu1, c1t, alpha1_e, t1opt, l1, b1)
   w_1, beta_1, point_1_, point_2_t, w2t, l2, a2t, M2t, delta_Hc = calculation_of_parameters_for_the_selection_of_the_working_grid(l1, fi, c_1, c1t, alpha_1, u, point_1_t, Ho_p)
-  beta2_e, t_opt, M2t_, b2_atl, f2, I2_min, W2_min = selection_of_the_working_grid_profile()
+  beta2_e, t_opt, b2_atl, f2, I2_min, W2_min = selection_of_the_working_grid_profile()
   mu2, F2, beta2_e, z_2, t2opt, beta2_ust, b2_l2 = specification_of_working_grid_parameters(e_opt, l2, b2, G_0, point_2_t, w2t, avg_diameter)
   ksi_grid, ksi_sum_g, ksi_end_grid, psi, psi_, delta_psi, beta_2, c_2, alpha_2, w_2 = parameters_of_the_working_grid_according_to_the_atlas(u, beta2_e, b2, l2, w2t, mu2)
   delta_Hp, delta_Hvc, E0, eff, eff_, delta_eff, point_2_, point_t_konec = calculation_of_relative_blade_efficiency(w_1, w_2, beta_1, beta_2, c_1, u, point_0, H_0, point_2_t, w2t, psi, c_2, delta_Hc, alpha_1, alpha_2)
@@ -751,11 +752,11 @@ def main2(G_0, H_0, ro, point_0, rotation_speed, avg_diameter, b2):
 def graff(G_0, H_0, ro, point_0, rotation_speed, avg_diameter, b2):
   u = calculation_of_circumferential_speed(avg_diameter, rotation_speed)
   Ho_c, Ho_p, h1t, c1t, a1t, M1t, F1_, point_1_t = calculation_of_parameters_for_the_nozzle(H_0, G_0, point_0, ro)       
-  alpha1_e, alpha0, t_opt, M1t_, b1, f1, I1_min ,W1_min = selection_of_the_nozzle_grating_profile()
+  alpha1_e, alpha0, t_opt, b1, f1, I1_min ,W1_min = selection_of_the_nozzle_grating_profile()
   el1, e_opt, l1, mu1, F1, z_1, t1opt, z1 = Clarification_nozzle_grating(c1t, G_0, F1_, avg_diameter, alpha1_e, b1, point_1_t)
   alpha_ust, b1_l1, ksi_noz, ksi_sum, ksi_end_noz, fi, fi_, delta_fi, c_1, alpha_1 = Clarification_other_nozzle_grating_parameters(mu1, c1t, alpha1_e, t1opt, l1, b1)
   w_1, beta_1, point_1_, point_2_t, w2t, l2, a2t, M2t, delta_Hc = calculation_of_parameters_for_the_selection_of_the_working_grid(l1, fi, c_1, c1t, alpha_1, u, point_1_t, Ho_p)
-  beta2_e, t_opt, M2t_, b2_atl, f2, I2_min, W2_min = selection_of_the_working_grid_profile()
+  beta2_e, t_opt, b2_atl, f2, I2_min, W2_min = selection_of_the_working_grid_profile()
   mu2, F2, beta2_e, z_2, t2opt, beta2_ust, b2_l2 = specification_of_working_grid_parameters(e_opt, l2, b2, G_0, point_2_t, w2t, avg_diameter)
   ksi_grid, ksi_sum_g, ksi_end_grid, psi, psi_, delta_psi, beta_2, c_2, alpha_2, w_2 = parameters_of_the_working_grid_according_to_the_atlas(u, beta2_e, b2, l2, w2t, mu2)
   delta_Hp, delta_Hvc, E0, eff, eff_, delta_eff, point_2_, point_t_konec = calculation_of_relative_blade_efficiency(w_1, w_2, beta_1, beta_2, c_1, u, point_0, H_0, point_2_t, w2t, psi, c_2, delta_Hc, alpha_1, alpha_2)
@@ -780,11 +781,11 @@ def data_output_points_reg(point_0, point_1_, point_2_, point_t_konec):
 def endurance(G_0, H_0, ro, point_0, rotation_speed, avg_diameter, b2):
   u = calculation_of_circumferential_speed(avg_diameter, rotation_speed)
   Ho_c, Ho_p, h1t, c1t, a1t, M1t, F1_, point_1_t = calculation_of_parameters_for_the_nozzle(H_0, G_0, point_0, ro)       
-  alpha1_e, alpha0, t_opt, M1t_, b1, f1, I1_min ,W1_min = selection_of_the_nozzle_grating_profile()
+  alpha1_e, alpha0, t_opt, b1, f1, I1_min ,W1_min = selection_of_the_nozzle_grating_profile()
   el1, e_opt, l1, mu1, F1, z_1, t1opt, z1 = Clarification_nozzle_grating(c1t, G_0, F1_, avg_diameter, alpha1_e, b1, point_1_t)
   alpha_ust, b1_l1, ksi_noz, ksi_sum, ksi_end_noz, fi, fi_, delta_fi, c_1, alpha_1 = Clarification_other_nozzle_grating_parameters(mu1, c1t, alpha1_e, t1opt, l1, b1)
   w_1, beta_1, point_1_, point_2_t, w2t, l2, a2t, M2t, delta_Hc = calculation_of_parameters_for_the_selection_of_the_working_grid(l1, fi, c_1, c1t, alpha_1, u, point_1_t, Ho_p)
-  beta2_e, t_opt, M2t_, b2_atl, f2, I2_min, W2_min = selection_of_the_working_grid_profile()
+  beta2_e, t_opt, b2_atl, f2, I2_min, W2_min = selection_of_the_working_grid_profile()
   mu2, F2, beta2_e, z_2, t2opt, beta2_ust, b2_l2 = specification_of_working_grid_parameters(e_opt, l2, b2, G_0, point_2_t, w2t, avg_diameter)
   ksi_grid, ksi_sum_g, ksi_end_grid, psi, psi_, delta_psi, beta_2, c_2, alpha_2, w_2 = parameters_of_the_working_grid_according_to_the_atlas(u, beta2_e, b2, l2, w2t, mu2)
   delta_Hp, delta_Hvc, E0, eff, eff_, delta_eff, point_2_, point_t_konec = calculation_of_relative_blade_efficiency(w_1, w_2, beta_1, beta_2, c_1, u, point_0, H_0, point_2_t, w2t, psi, c_2, delta_Hc, alpha_1, alpha_2)
@@ -795,11 +796,11 @@ def endurance(G_0, H_0, ro, point_0, rotation_speed, avg_diameter, b2):
 def determination_of_the_number_of_steps(G_0, real_p0, point_0, avg_diameter, ro, rotation_speed, H_0, b2, on):
   u = calculation_of_circumferential_speed(avg_diameter, rotation_speed)
   Ho_c, Ho_p, h1t, c1t, a1t, M1t, F1_, point_1_t = calculation_of_parameters_for_the_nozzle(H_0, G_0, point_0, ro)       
-  alpha1_e, alpha0, t_opt, M1t_, b1, f1, I1_min ,W1_min = selection_of_the_nozzle_grating_profile()
+  alpha1_e, alpha0, t_opt, b1, f1, I1_min ,W1_min = selection_of_the_nozzle_grating_profile()
   el1, e_opt, l1, mu1, F1, z_1, t1opt, z1 = Clarification_nozzle_grating(c1t, G_0, F1_, avg_diameter, alpha1_e, b1, point_1_t)
   alpha_ust, b1_l1, ksi_noz, ksi_sum, ksi_end_noz, fi, fi_, delta_fi, c_1, alpha_1 = Clarification_other_nozzle_grating_parameters(mu1, c1t, alpha1_e, t1opt, l1, b1)
   w_1, beta_1, point_1_, point_2_t, w2t, l2, a2t, M2t, delta_Hc = calculation_of_parameters_for_the_selection_of_the_working_grid(l1, fi, c_1, c1t, alpha_1, u, point_1_t, Ho_p)
-  beta2_e, t_opt, M2t_, b2_atl, f2, I2_min, W2_min = selection_of_the_working_grid_profile()
+  beta2_e, t_opt, b2_atl, f2, I2_min, W2_min = selection_of_the_working_grid_profile()
   mu2, F2, beta2_e, z_2, t2opt, beta2_ust, b2_l2 = specification_of_working_grid_parameters(e_opt, l2, b2, G_0, point_2_t, w2t, avg_diameter)
   ksi_grid, ksi_sum_g, ksi_end_grid, psi, psi_, delta_psi, beta_2, c_2, alpha_2, w_2 = parameters_of_the_working_grid_according_to_the_atlas(u, beta2_e, b2, l2, w2t, mu2)
   delta_Hp, delta_Hvc, E0, eff, eff_, delta_eff, point_2_, point_t_konec = calculation_of_relative_blade_efficiency(w_1, w_2, beta_1, beta_2, c_1, u, point_0, H_0, point_2_t, w2t, psi, c_2, delta_Hc, alpha_1, alpha_2)
@@ -925,11 +926,11 @@ def determination_of_the_number_of_steps(G_0, real_p0, point_0, avg_diameter, ro
 def vibration_diagram(G_0, H_0, ro, point_0, rotation_speed, avg_diameter, b2, real_p0):
   u = calculation_of_circumferential_speed(avg_diameter, rotation_speed)
   Ho_c, Ho_p, h1t, c1t, a1t, M1t, F1_, point_1_t = calculation_of_parameters_for_the_nozzle(H_0, G_0, point_0, ro)       
-  alpha1_e, alpha0, t_opt, M1t_, b1, f1, I1_min ,W1_min = selection_of_the_nozzle_grating_profile()
+  alpha1_e, alpha0, t_opt, b1, f1, I1_min ,W1_min = selection_of_the_nozzle_grating_profile()
   el1, e_opt, l1, mu1, F1, z_1, t1opt, z1 = Clarification_nozzle_grating(c1t, G_0, F1_, avg_diameter, alpha1_e, b1, point_1_t)
   alpha_ust, b1_l1, ksi_noz, ksi_sum, ksi_end_noz, fi, fi_, delta_fi, c_1, alpha_1 = Clarification_other_nozzle_grating_parameters(mu1, c1t, alpha1_e, t1opt, l1, b1)
   w_1, beta_1, point_1_, point_2_t, w2t, l2, a2t, M2t, delta_Hc = calculation_of_parameters_for_the_selection_of_the_working_grid(l1, fi, c_1, c1t, alpha_1, u, point_1_t, Ho_p)
-  beta2_e, t_opt, M2t_, b2_atl, f2, I2_min, W2_min = selection_of_the_working_grid_profile()
+  beta2_e, t_opt, b2_atl, f2, I2_min, W2_min = selection_of_the_working_grid_profile()
   mu2, F2, beta2_e, z_2, t2opt, beta2_ust, b2_l2 = specification_of_working_grid_parameters(e_opt, l2, b2, G_0, point_2_t, w2t, avg_diameter)
   ksi_grid, ksi_sum_g, ksi_end_grid, psi, psi_, delta_psi, beta_2, c_2, alpha_2, w_2 = parameters_of_the_working_grid_according_to_the_atlas(u, beta2_e, b2, l2, w2t, mu2)
   delta_Hp, delta_Hvc, E0, eff, eff_, delta_eff, point_2_, point_t_konec = calculation_of_relative_blade_efficiency(w_1, w_2, beta_1, beta_2, c_1, u, point_0, H_0, point_2_t, w2t, psi, c_2, delta_Hc, alpha_1, alpha_2)
