@@ -764,13 +764,13 @@ def graff(G_0, H_0, ro, point_0, rotation_speed, avg_diameter, b2):
   point_H1, point_H2, point_H3, point_H4 = loss_points(G_0, H_0, ro, point_0, rotation_speed, avg_diameter, b2)
   return point_1_t, point_1_, point_2_t, point_2_, point_t_konec, point_H1, point_H2, point_H3, point_H4
   
-def data_output_points_reg(point_0, point_1_, point_2_, point_t_konec):
+def data_output_points_reg(point_0, point_1_, point_2_, point_H4):
   d = {
-     'Name': ["point_0", "point_1_", "point_2_", "point_t_konec"],       
-     'P, МПа': [point_0.P, point_1_.P, point_2_.P, point_t_konec.P],
-     'T, K': [point_0.T, point_1_.T, point_2_.T, point_t_konec.T],
-     'h, кДж/кг': [point_0.h, point_1_.h, point_2_.h, point_t_konec.h],
-     'S, кДж/(кг * K)': [point_0.s, point_1_.s, point_2_.s, point_t_konec.s]
+     'Name': ["point_0", "point_1_", "point_2_", "point_H4"],       
+     'P, МПа': [point_0.P, point_1_.P, point_2_.P, point_H4.P],
+     'T, K': [point_0.T, point_1_.T, point_2_.T, point_H4.T],
+     'h, кДж/кг': [point_0.h, point_1_.h, point_2_.h, point_H4.h],
+     'S, кДж/(кг * K)': [point_0.s, point_1_.s, point_2_.s, point_H4.s]
   }
   df = pd.DataFrame(data=d)
   blankIndex=[''] * len(df)
