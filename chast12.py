@@ -224,7 +224,7 @@ def data_output(Ho_c, Ho_p, h1t, c1t, a1t, M1t, F1_, point_1_t):
               "Скорость звука на выходе из сопловой решётки", 
               "Число Маха на выходе из сопловой решётки", 
               "Предварительная площадь выхода потока из сопловой решётки"],
-     'Parameters': ["Ho_c", "Ho_p", "h1t", "c1t", "a1t", "M1t", "F1_"],
+     'Parameters': ["Ho_c, кДж/кг", "Ho_p, кДж/кг", "h1t, кДж/кг", "c1t, м/с", "a1t, м/с", "M1t", "F1_, м^2"],
     'Value': [Ho_c, Ho_p, h1t, c1t, a1t, M1t, F1_]
   }
   df = pd.DataFrame(data=d)
@@ -237,26 +237,25 @@ def data_output(Ho_c, Ho_p, h1t, c1t, a1t, M1t, F1_, point_1_t):
 def selection_of_the_nozzle_grating_profile():
   alpha0 = 90
   alpha1_e = 15
-  t_opt = [0.70,0.85] 
+  #t_opt = [0.70,0.85] 
   #M1t_ = 0.85
   b1 = 100
   f1 = 3.3 # см^2 далее где необхожимо осуществлен перевод едениц измерения
   I1_min = 0.36 # см^4 далее где необхожимо осуществлен перевод едениц измерения
   W1_min = 0.45 # см^3 далее где необхожимо осуществлен перевод едениц измерения
-  return alpha1_e, alpha0, t_opt, b1, f1, I1_min ,W1_min
+  return alpha1_e, alpha0, b1, f1, I1_min ,W1_min
 
 #вывод параметров в табличном виде
-def data_output1(alpha1_e, alpha0, t_opt, b1, f1, I1_min, W1_min):
+def data_output1(alpha1_e, alpha0, b1, f1, I1_min, W1_min):
   d = {
      'Name': ["Угол выхода потока из решётки", 
               "Угол входа потока в решётку", 
-              "Диапазон для ", 
               "Хорда сопловой решётки", 
               "Площадь поперечного сечения сопловой решётки", 
               "Момент инерции сопловой решётки", 
               "Момент сопротивления сопловой решётки"],
-     'Parameters': ["alpha1_e", "alpha0", "t_opt", "b1", "f1", "I1_min", "W1_min"],
-     'Value': [alpha1_e, alpha0, t_opt, b1, f1, I1_min, W1_min]
+     'Parameters': ["alpha1_e, град", "alpha0, град", "b1, мм", "f1, см^2", "I1_min, см^4", "W1_min, см^3"],
+     'Value': [alpha1_e, alpha0, b1, f1, I1_min, W1_min]
   }
   df = pd.DataFrame(data=d)
   blankIndex=[''] * len(df)
@@ -289,7 +288,7 @@ def data_output2(el1, e_opt, l1, mu1, F1, z_1, t1opt, z1):
               "Количество лопаток в сопловой решетке (предварительная)", 
               "Оптимальный относительный шаг", 
               "Количество лопаток в сопловой решетке"], 
-     'Parameters': ["el1", "e_opt", "l1", "mu1", "F1", "z_1", "t1opt", "z1"],
+     'Parameters': ["el1, м", "e_opt", "l1, м", "mu1", "F1, м^2", "z_1, шт", "t1opt", "z1, шт"],
      'Value': [el1, e_opt, l1, mu1, F1, z_1, t1opt, z1]
   }
   df = pd.DataFrame(data=d)
@@ -324,7 +323,7 @@ def data_output3(alpha_ust, b1_l1, ksi_noz, ksi_sum, ksi_end_noz, fi, fi_, delta
               "процентное отклонение fi и fi_",
               "Скорость выхода пара из сопловой решетки",
               "Реальный угол выхода потока из сопловой решётки"],      
-     'Parameters': ["alpha_ust", "b1_l1", "ksi_noz", "ksi_sum", "ksi_end_noz", "fi", "fi_", "delta_fi", "c_1", "alpha_1"],
+     'Parameters': ["alpha_ust, град", "b1_l1", "ksi_noz", "ksi_sum", "ksi_end_noz", "fi", "fi_", "delta_fi, %", "c_1, м/с", "alpha_1, град"],
      'Value': [alpha_ust, b1_l1, ksi_noz, ksi_sum, ksi_end_noz, fi, fi_, delta_fi, c_1, alpha_1]
   }
   df = pd.DataFrame(data=d)
@@ -359,7 +358,7 @@ def data_output4(w_1, beta_1, point_1_, point_2_t, w2t, l2, a2t, M2t, delta_Hc):
               "Скорость звука за рабочей решеткой (теоретическая)", 
               "Теоретическое число Маха за рабочей решёткой", 
               "Потери в сопловой решетке"],       
-     'Parameters': ["w_1", "beta_1", "w2t", "l2", "a2t", "M2t", "delta_Hc"],
+     'Parameters': ["w_1, м", "beta_1, град", "w2t, м/с", "l2, м", "a2t, м/с", "M2t", "delta_Hc, кДж/кг"],
      'Value': [w_1, beta_1, w2t, l2, a2t, M2t, delta_Hc]
   }
   df = pd.DataFrame(data=d)
@@ -371,25 +370,24 @@ def data_output4(w_1, beta_1, point_1_, point_2_t, w2t, l2, a2t, M2t, delta_Hc):
 #выбор профиля рабочей решетки Р-30-21А
 def selection_of_the_working_grid_profile():
   beta2_e = 22 #19-24
-  t_opt = [0.58,0.68]
+  #t_opt = [0.58,0.68]
   #M2t_ = 0.9
   b2_atl = 25.95    
   f2 = 1.85 # см^2 далее где необхожимо осуществлен перевод едениц измерения
   I2_min = 0.205 # см^4 далее где необхожимо осуществлен перевод едениц измерения
   W2_min = 0.324 # см^3 далее где необхожимо осуществлен перевод едениц измерения
-  return beta2_e, t_opt, b2_atl, f2, I2_min, W2_min
+  return beta2_e, b2_atl, f2, I2_min, W2_min
 
-def data_output5(beta2_e, t_opt, b2_atl, f2, I2_min, W2_min):
+def data_output5(beta2_e, b2_atl, f2, I2_min, W2_min):
   d = {
      'Name': [ 
-              "Угол выхода потока из рабочей решётки по атласу", 
-              "Оптимальный шаг рабочей решётки",  
+              "Угол выхода потока из рабочей решётки по атласу",  
               "Хорда рабочей решётки по атласу", 
               "Площадь поперечного сечения рабочей решётки", 
               "Момент инерции рабочей решётки", 
               "Момент сопротивления рабочей решётки"],       
-     'Parameters': ["beta2_e", "t_opt", "b2_atl", "f2", "I2_min", "W2_min"],
-     'Value': [beta2_e, t_opt, b2_atl, f2, I2_min, W2_min]
+     'Parameters': ["beta2_e, град", "b2_atl, мм", "f2, см^2", "I2_min, см^4", "W2_min, см^3"],
+     'Value': [beta2_e, b2_atl, f2, I2_min, W2_min]
   }
   df = pd.DataFrame(data=d)
   blankIndex=[''] * len(df)
@@ -419,7 +417,7 @@ def data_output6(mu2, F2, beta2_e, z_2, t2opt, beta2_ust, b2_l2):
               "Оптимальный шаг рабочей решётки", 
               "Угол установки рабочих лопаток", 
               "Отношение b2/l2"],       
-     'Parameters': ["mu2", "F2", "beta2_e", "z_2", "t2opt", "beta2_ust", "b2_l2"],
+     'Parameters': ["mu2", "F2, м^2", "beta2_e, град", "z_2, шт", "t2opt", "beta2_ust, град", "b2_l2"],
      'Value': [mu2, F2, beta2_e, z_2, t2opt, beta2_ust, b2_l2]
   }
   df = pd.DataFrame(data=d)
@@ -457,7 +455,7 @@ def data_output7(ksi_grid, ksi_sum_g, ksi_end_grid, psi, psi_, delta_psi, beta_2
               "Абсолютная скорость на выходе из рабочей решётки",
               "Угол выхода абсолютной скорости из рабочей решётки",
               "Действительная относительная скорость на выходе из рабочей решётки"],       
-     'Parameters': ["ksi_grid", "ksi_sum_g", "ksi_end_grid", "psi", "psi_", "delta_psi", "beta_2", "c_2", "alpha_2", "w_2"],
+     'Parameters': ["ksi_grid", "ksi_sum_g", "ksi_end_grid", "psi", "psi_", "delta_psi, %", "beta_2, град", "c_2, м/с", "alpha_2, град", "w_2, м/с"],
      'Value': [ksi_grid, ksi_sum_g, ksi_end_grid, psi, psi_, delta_psi, beta_2, c_2, alpha_2, w_2]
   }
   df = pd.DataFrame(data=d)
@@ -503,7 +501,7 @@ def data_output8(cf, u_cf, u_cf_opt):
      'Name': ["Фиктивная скорость", 
               "Отношение скоростей", 
               "Оптимальное отношение скоростей"],       
-     'Parameters': ["cf", "u_cf", "u_cf_opt"],
+     'Parameters': ["cf, м/с", "u_cf", "u_cf_opt"],
      'Value': [cf, u_cf, u_cf_opt]
   }
   df = pd.DataFrame(data=d)
@@ -524,7 +522,7 @@ def calculation_of_relative_blade_efficiency(w_1, w_2, beta_1, beta_2, c_1, u, p
   eff = (E0 - delta_Hc - delta_Hp - (1 - x_vc) * delta_Hvc) / E0
   #eff_ = (u * (c_1 * m.cos(m.radians(alpha_1)) + c_2 * m.cos(m.radians(alpha_2)))) / E0 / 1000
   eff_ = (u * (w_1 * m.cos(m.radians(beta_1)) + w_2 * m.cos(m.radians(beta_2)))) / E0 / 1000
-  delta_eff = (eff - eff_) / eff   
+  delta_eff = (eff - eff_) / eff * 100  
   return delta_Hp, delta_Hvc, E0, eff, eff_, delta_eff, point_2_, point_t_konec
 
 def data_output9(delta_Hp, delta_Hvc, E0, eff, eff_, delta_eff, point_2_, point_t_konec):
@@ -534,8 +532,8 @@ def data_output9(delta_Hp, delta_Hvc, E0, eff, eff_, delta_eff, point_2_, point_
               "Располагаемая энергия ступени", 
               "Лопаточный КПД по расчёту через потери энергии", 
               "Лопаточный КПД по расчёту через скорости", 
-              "Расхождение eff и eff_"],       
-     'Parameters': ["delta_Hp", "delta_Hvc", "E0", "eff", "eff_", "delta_eff"],
+              "Процентное отклонение eff и eff_"],       
+     'Parameters': ["delta_Hp, кДж/кг", "delta_Hvc, кДж/кг", "E0, кДж/кг", "eff", "eff_", "delta_eff, %"],
      'Value': [delta_Hp, delta_Hvc, E0, eff, eff_, delta_eff]
   }
   df = pd.DataFrame(data=d)
@@ -553,11 +551,11 @@ def efficiency_graph_from_U_cf_and_avg_diameter(G_0, H_0, ro, point_0, rotation_
     avg_diameter = d_value_
     u = calculation_of_circumferential_speed(avg_diameter, rotation_speed)
     Ho_c, Ho_p, h1t, c1t, a1t, M1t, F1_, point_1_t = calculation_of_parameters_for_the_nozzle(H_0, G_0, point_0, ro)       
-    alpha1_e, alpha0, t_opt, b1, f1, I1_min ,W1_min = selection_of_the_nozzle_grating_profile()
+    alpha1_e, alpha0, b1, f1, I1_min ,W1_min = selection_of_the_nozzle_grating_profile()
     el1, e_opt, l1, mu1, F1, z_1, t1opt, z1 = Clarification_nozzle_grating(c1t, G_0, F1_, avg_diameter, alpha1_e, b1, point_1_t)
     alpha_ust, b1_l1, ksi_noz, ksi_sum, ksi_end_noz, fi, fi_, delta_fi, c_1, alpha_1 = Clarification_other_nozzle_grating_parameters(mu1, c1t, alpha1_e, t1opt, l1, b1)
     w_1, beta_1, point_1_, point_2_t, w2t, l2, a2t, M2t, delta_Hc = calculation_of_parameters_for_the_selection_of_the_working_grid(l1, fi, c_1, c1t, alpha_1, u, point_1_t, Ho_p)
-    beta2_e, t_opt, b2, f2, I2_min, W2_min = selection_of_the_working_grid_profile()
+    beta2_e, b2, f2, I2_min, W2_min = selection_of_the_working_grid_profile()
     mu2, F2, beta2_e, z_2, t2opt, beta2_ust, b2_l2 = specification_of_working_grid_parameters(e_opt, l2, b2, G_0, point_2_t, w2t, avg_diameter)
     ksi_grid, ksi_sum_g, ksi_end_grid, psi, psi_, delta_psi, beta_2, c_2, alpha_2, w_2 = parameters_of_the_working_grid_according_to_the_atlas(u, beta2_e, b2, l2, w2t, mu2)
     delta_Hp, delta_Hvc, E0, eff, eff_, delta_eff, point_2_, point_t_konec = calculation_of_relative_blade_efficiency(w_1, w_2, beta_1, beta_2, c_1, u, point_0, H_0, point_2_t, w2t, psi, c_2, delta_Hc, alpha_1, alpha_2)
@@ -632,7 +630,7 @@ def data_output10(peripheral_diameter, delta_r, delta_e, ksi_bandage, deltaH_y, 
               "Коэффициент сегментных потерь",
               "Относительные потери в ступени, связанные с парциальностью",             
               "Абсолютные потери от парциальности"],       
-     'Parameters': ["peripheral_diameter", "delta_r", "delta_e", "ksi_bandage", "deltaH_y", "ksi_friction", "deltaH_tr", "ksi_v", "B2", "ksi_segment", "ksi_partiality", "deltaH_partiality"],
+     'Parameters': ["peripheral_diameter, м", "delta_r, м", "delta_e, м", "ksi_bandage", "deltaH_y, кДж/кг", "ksi_friction", "deltaH_tr, кДж/кг", "ksi_v", "B2, м", "ksi_segment", "ksi_partiality", "deltaH_partiality, кДж/кг"],
      'Value': [peripheral_diameter, delta_r, delta_e, ksi_bandage, deltaH_y, ksi_friction, deltaH_tr, ksi_v, B2, ksi_segment, ksi_partiality, deltaH_partiality]
   }
   df = pd.DataFrame(data=d)
@@ -654,7 +652,7 @@ def data_output11(H_i, internal_eff, N_i):
      'Name': ["Использованный теплоперепад ступени", 
               "Внутренний относительный КПД ступени", 
               "Внутренняя мощность ступени"],       
-     'Parameters': ["H_i", "internal_eff", "N_i"],
+     'Parameters': ["H_i, кДж/кг", "internal_eff", "N_i, кВт"],
      'Value': [H_i, internal_eff, N_i]
   }
   df = pd.DataFrame(data=d)
@@ -678,7 +676,7 @@ def data_output12(W2_min_, sigma_bending, omega, sigma_stretching):
               "Напряжение изгиба лопатки", 
               "угловая скорость рабочего колеса", 
               "Напряжение растяжения лопатки"],       
-     'Parameters': ["W2_min_", "sigma_bending", "omega", "sigma_stretching"],
+     'Parameters': ["W2_min_, м^3", "sigma_bending, МПа", "omega, рад/с", "sigma_stretching, МПа"],
      'Value': [W2_min_, sigma_bending, omega, sigma_stretching]
   }
   df = pd.DataFrame(data=d)
@@ -690,16 +688,17 @@ def data_output12(W2_min_, sigma_bending, omega, sigma_stretching):
 def loss_points(G_0, H_0, ro, point_0, rotation_speed, avg_diameter, b2):
   u = calculation_of_circumferential_speed(avg_diameter, rotation_speed)
   Ho_c, Ho_p, h1t, c1t, a1t, M1t, F1_, point_1_t = calculation_of_parameters_for_the_nozzle(H_0, G_0, point_0, ro)       
-  alpha1_e, alpha0, t_opt, b1, f1, I1_min ,W1_min = selection_of_the_nozzle_grating_profile()
+  alpha1_e, alpha0, b1, f1, I1_min ,W1_min = selection_of_the_nozzle_grating_profile()
   el1, e_opt, l1, mu1, F1, z_1, t1opt, z1 = Clarification_nozzle_grating(c1t, G_0, F1_, avg_diameter, alpha1_e, b1, point_1_t)
   alpha_ust, b1_l1, ksi_noz, ksi_sum, ksi_end_noz, fi, fi_, delta_fi, c_1, alpha_1 = Clarification_other_nozzle_grating_parameters(mu1, c1t, alpha1_e, t1opt, l1, b1)
   w_1, beta_1, point_1_, point_2_t, w2t, l2, a2t, M2t, delta_Hc = calculation_of_parameters_for_the_selection_of_the_working_grid(l1, fi, c_1, c1t, alpha_1, u, point_1_t, Ho_p)
-  beta2_e, t_opt, b2_atl, f2, I2_min, W2_min = selection_of_the_working_grid_profile()
+  beta2_e, b2_atl, f2, I2_min, W2_min = selection_of_the_working_grid_profile()
   mu2, F2, beta2_e, z_2, t2opt, beta2_ust, b2_l2 = specification_of_working_grid_parameters(e_opt, l2, b2, G_0, point_2_t, w2t, avg_diameter)
   ksi_grid, ksi_sum_g, ksi_end_grid, psi, psi_, delta_psi, beta_2, c_2, alpha_2, w_2 = parameters_of_the_working_grid_according_to_the_atlas(u, beta2_e, b2, l2, w2t, mu2)
   delta_Hp, delta_Hvc, E0, eff, eff_, delta_eff, point_2_, point_t_konec = calculation_of_relative_blade_efficiency(w_1, w_2, beta_1, beta_2, c_1, u, point_0, H_0, point_2_t, w2t, psi, c_2, delta_Hc, alpha_1, alpha_2)
   cf, u_cf, u_cf_opt = calculation_of_the_velocity_ratio(u, H_0, fi, alpha_1, ro)   
   peripheral_diameter, delta_r, delta_e, ksi_bandage, deltaH_y, ksi_friction, deltaH_tr, ksi_v, B2, ksi_segment, ksi_partiality, deltaH_partiality = determination_of_parameters_for_calculating_internal_efficiency(beta2_ust, b2, e_opt, alpha1_e, avg_diameter, l2, eff, F1, ro, E0, u_cf)
+  H_i, internal_eff, N_i = calculation_of_internal_relative_efficiency(G_0, E0, delta_Hc, delta_Hp, delta_Hvc, deltaH_y, deltaH_tr, deltaH_partiality)
   x_vc = 0
   h2 = point_2_t.h + delta_Hp
 
@@ -707,16 +706,17 @@ def loss_points(G_0, H_0, ro, point_0, rotation_speed, avg_diameter, b2):
   point_H2 = gas(P = point_2_t.P, h = h2 + deltaH_tr + deltaH_partiality)
   point_H3 = gas(P = point_2_t.P, h = h2 + deltaH_tr + deltaH_partiality + deltaH_y)
   point_H4 = gas(P = point_2_t.P, h = h2 + deltaH_tr + deltaH_partiality + deltaH_y + ((1 - x_vc) * delta_Hvc))
+
   return point_H1, point_H2, point_H3, point_H4
 
 def main(G_0, H_0, ro, point_0, rotation_speed, avg_diameter, b2):
   u = calculation_of_circumferential_speed(avg_diameter, rotation_speed)
   Ho_c, Ho_p, h1t, c1t, a1t, M1t, F1_, point_1_t = calculation_of_parameters_for_the_nozzle(H_0, G_0, point_0, ro)       
-  alpha1_e, alpha0, t_opt, b1, f1, I1_min ,W1_min = selection_of_the_nozzle_grating_profile()
+  alpha1_e, alpha0, b1, f1, I1_min ,W1_min = selection_of_the_nozzle_grating_profile()
   el1, e_opt, l1, mu1, F1, z_1, t1opt, z1 = Clarification_nozzle_grating(c1t, G_0, F1_, avg_diameter, alpha1_e, b1, point_1_t)
   alpha_ust, b1_l1, ksi_noz, ksi_sum, ksi_end_noz, fi, fi_, delta_fi, c_1, alpha_1 = Clarification_other_nozzle_grating_parameters(mu1, c1t, alpha1_e, t1opt, l1, b1)
   w_1, beta_1, point_1_, point_2_t, w2t, l2, a2t, M2t, delta_Hc = calculation_of_parameters_for_the_selection_of_the_working_grid(l1, fi, c_1, c1t, alpha_1, u, point_1_t, Ho_p)
-  beta2_e, t_opt, b2_atl, f2, I2_min, W2_min = selection_of_the_working_grid_profile()
+  beta2_e, b2_atl, f2, I2_min, W2_min = selection_of_the_working_grid_profile()
   mu2, F2, beta2_e, z_2, t2opt, beta2_ust, b2_l2 = specification_of_working_grid_parameters(e_opt, l2, b2, G_0, point_2_t, w2t, avg_diameter)
   ksi_grid, ksi_sum_g, ksi_end_grid, psi, psi_, delta_psi, beta_2, c_2, alpha_2, w_2 = parameters_of_the_working_grid_according_to_the_atlas(u, beta2_e, b2, l2, w2t, mu2)
   delta_Hp, delta_Hvc, E0, eff, eff_, delta_eff, point_2_, point_t_konec = calculation_of_relative_blade_efficiency(w_1, w_2, beta_1, beta_2, c_1, u, point_0, H_0, point_2_t, w2t, psi, c_2, delta_Hc, alpha_1, alpha_2)
@@ -736,11 +736,11 @@ def main(G_0, H_0, ro, point_0, rotation_speed, avg_diameter, b2):
 def main2(G_0, H_0, ro, point_0, rotation_speed, avg_diameter, b2):
   u = calculation_of_circumferential_speed(avg_diameter, rotation_speed)
   Ho_c, Ho_p, h1t, c1t, a1t, M1t, F1_, point_1_t = calculation_of_parameters_for_the_nozzle(H_0, G_0, point_0, ro)       
-  alpha1_e, alpha0, t_opt, b1, f1, I1_min ,W1_min = selection_of_the_nozzle_grating_profile()
+  alpha1_e, alpha0, b1, f1, I1_min ,W1_min = selection_of_the_nozzle_grating_profile()
   el1, e_opt, l1, mu1, F1, z_1, t1opt, z1 = Clarification_nozzle_grating(c1t, G_0, F1_, avg_diameter, alpha1_e, b1, point_1_t)
   alpha_ust, b1_l1, ksi_noz, ksi_sum, ksi_end_noz, fi, fi_, delta_fi, c_1, alpha_1 = Clarification_other_nozzle_grating_parameters(mu1, c1t, alpha1_e, t1opt, l1, b1)
   w_1, beta_1, point_1_, point_2_t, w2t, l2, a2t, M2t, delta_Hc = calculation_of_parameters_for_the_selection_of_the_working_grid(l1, fi, c_1, c1t, alpha_1, u, point_1_t, Ho_p)
-  beta2_e, t_opt, b2_atl, f2, I2_min, W2_min = selection_of_the_working_grid_profile()
+  beta2_e, b2_atl, f2, I2_min, W2_min = selection_of_the_working_grid_profile()
   mu2, F2, beta2_e, z_2, t2opt, beta2_ust, b2_l2 = specification_of_working_grid_parameters(e_opt, l2, b2, G_0, point_2_t, w2t, avg_diameter)
   ksi_grid, ksi_sum_g, ksi_end_grid, psi, psi_, delta_psi, beta_2, c_2, alpha_2, w_2 = parameters_of_the_working_grid_according_to_the_atlas(u, beta2_e, b2, l2, w2t, mu2)
   delta_Hp, delta_Hvc, E0, eff, eff_, delta_eff, point_2_, point_t_konec = calculation_of_relative_blade_efficiency(w_1, w_2, beta_1, beta_2, c_1, u, point_0, H_0, point_2_t, w2t, psi, c_2, delta_Hc, alpha_1, alpha_2)
@@ -752,11 +752,11 @@ def main2(G_0, H_0, ro, point_0, rotation_speed, avg_diameter, b2):
 def graff(G_0, H_0, ro, point_0, rotation_speed, avg_diameter, b2):
   u = calculation_of_circumferential_speed(avg_diameter, rotation_speed)
   Ho_c, Ho_p, h1t, c1t, a1t, M1t, F1_, point_1_t = calculation_of_parameters_for_the_nozzle(H_0, G_0, point_0, ro)       
-  alpha1_e, alpha0, t_opt, b1, f1, I1_min ,W1_min = selection_of_the_nozzle_grating_profile()
+  alpha1_e, alpha0, b1, f1, I1_min ,W1_min = selection_of_the_nozzle_grating_profile()
   el1, e_opt, l1, mu1, F1, z_1, t1opt, z1 = Clarification_nozzle_grating(c1t, G_0, F1_, avg_diameter, alpha1_e, b1, point_1_t)
   alpha_ust, b1_l1, ksi_noz, ksi_sum, ksi_end_noz, fi, fi_, delta_fi, c_1, alpha_1 = Clarification_other_nozzle_grating_parameters(mu1, c1t, alpha1_e, t1opt, l1, b1)
   w_1, beta_1, point_1_, point_2_t, w2t, l2, a2t, M2t, delta_Hc = calculation_of_parameters_for_the_selection_of_the_working_grid(l1, fi, c_1, c1t, alpha_1, u, point_1_t, Ho_p)
-  beta2_e, t_opt, b2_atl, f2, I2_min, W2_min = selection_of_the_working_grid_profile()
+  beta2_e, b2_atl, f2, I2_min, W2_min = selection_of_the_working_grid_profile()
   mu2, F2, beta2_e, z_2, t2opt, beta2_ust, b2_l2 = specification_of_working_grid_parameters(e_opt, l2, b2, G_0, point_2_t, w2t, avg_diameter)
   ksi_grid, ksi_sum_g, ksi_end_grid, psi, psi_, delta_psi, beta_2, c_2, alpha_2, w_2 = parameters_of_the_working_grid_according_to_the_atlas(u, beta2_e, b2, l2, w2t, mu2)
   delta_Hp, delta_Hvc, E0, eff, eff_, delta_eff, point_2_, point_t_konec = calculation_of_relative_blade_efficiency(w_1, w_2, beta_1, beta_2, c_1, u, point_0, H_0, point_2_t, w2t, psi, c_2, delta_Hc, alpha_1, alpha_2)
@@ -781,11 +781,11 @@ def data_output_points_reg(point_0, point_1_, point_2_, point_t_konec):
 def endurance(G_0, H_0, ro, point_0, rotation_speed, avg_diameter, b2):
   u = calculation_of_circumferential_speed(avg_diameter, rotation_speed)
   Ho_c, Ho_p, h1t, c1t, a1t, M1t, F1_, point_1_t = calculation_of_parameters_for_the_nozzle(H_0, G_0, point_0, ro)       
-  alpha1_e, alpha0, t_opt, b1, f1, I1_min ,W1_min = selection_of_the_nozzle_grating_profile()
+  alpha1_e, alpha0, b1, f1, I1_min ,W1_min = selection_of_the_nozzle_grating_profile()
   el1, e_opt, l1, mu1, F1, z_1, t1opt, z1 = Clarification_nozzle_grating(c1t, G_0, F1_, avg_diameter, alpha1_e, b1, point_1_t)
   alpha_ust, b1_l1, ksi_noz, ksi_sum, ksi_end_noz, fi, fi_, delta_fi, c_1, alpha_1 = Clarification_other_nozzle_grating_parameters(mu1, c1t, alpha1_e, t1opt, l1, b1)
   w_1, beta_1, point_1_, point_2_t, w2t, l2, a2t, M2t, delta_Hc = calculation_of_parameters_for_the_selection_of_the_working_grid(l1, fi, c_1, c1t, alpha_1, u, point_1_t, Ho_p)
-  beta2_e, t_opt, b2_atl, f2, I2_min, W2_min = selection_of_the_working_grid_profile()
+  beta2_e, b2_atl, f2, I2_min, W2_min = selection_of_the_working_grid_profile()
   mu2, F2, beta2_e, z_2, t2opt, beta2_ust, b2_l2 = specification_of_working_grid_parameters(e_opt, l2, b2, G_0, point_2_t, w2t, avg_diameter)
   ksi_grid, ksi_sum_g, ksi_end_grid, psi, psi_, delta_psi, beta_2, c_2, alpha_2, w_2 = parameters_of_the_working_grid_according_to_the_atlas(u, beta2_e, b2, l2, w2t, mu2)
   delta_Hp, delta_Hvc, E0, eff, eff_, delta_eff, point_2_, point_t_konec = calculation_of_relative_blade_efficiency(w_1, w_2, beta_1, beta_2, c_1, u, point_0, H_0, point_2_t, w2t, psi, c_2, delta_Hc, alpha_1, alpha_2)
@@ -793,14 +793,14 @@ def endurance(G_0, H_0, ro, point_0, rotation_speed, avg_diameter, b2):
   data_output12(*calculation_of_strength(W2_min, b2, G_0, H_0, eff, l2, u, z_2, e_opt, rotation_speed, avg_diameter))
 
 #опеределение числа ступеней 
-def determination_of_the_number_of_steps(G_0, real_p0, point_0, avg_diameter, ro, rotation_speed, H_0, b2, on):
+def determination_of_the_number_of_steps(G_0, real_p0, point_0, point_1, avg_diameter, ro, rotation_speed, H_0, b2, on):
   u = calculation_of_circumferential_speed(avg_diameter, rotation_speed)
   Ho_c, Ho_p, h1t, c1t, a1t, M1t, F1_, point_1_t = calculation_of_parameters_for_the_nozzle(H_0, G_0, point_0, ro)       
-  alpha1_e, alpha0, t_opt, b1, f1, I1_min ,W1_min = selection_of_the_nozzle_grating_profile()
+  alpha1_e, alpha0, b1, f1, I1_min ,W1_min = selection_of_the_nozzle_grating_profile()
   el1, e_opt, l1, mu1, F1, z_1, t1opt, z1 = Clarification_nozzle_grating(c1t, G_0, F1_, avg_diameter, alpha1_e, b1, point_1_t)
   alpha_ust, b1_l1, ksi_noz, ksi_sum, ksi_end_noz, fi, fi_, delta_fi, c_1, alpha_1 = Clarification_other_nozzle_grating_parameters(mu1, c1t, alpha1_e, t1opt, l1, b1)
   w_1, beta_1, point_1_, point_2_t, w2t, l2, a2t, M2t, delta_Hc = calculation_of_parameters_for_the_selection_of_the_working_grid(l1, fi, c_1, c1t, alpha_1, u, point_1_t, Ho_p)
-  beta2_e, t_opt, b2_atl, f2, I2_min, W2_min = selection_of_the_working_grid_profile()
+  beta2_e, b2_atl, f2, I2_min, W2_min = selection_of_the_working_grid_profile()
   mu2, F2, beta2_e, z_2, t2opt, beta2_ust, b2_l2 = specification_of_working_grid_parameters(e_opt, l2, b2, G_0, point_2_t, w2t, avg_diameter)
   ksi_grid, ksi_sum_g, ksi_end_grid, psi, psi_, delta_psi, beta_2, c_2, alpha_2, w_2 = parameters_of_the_working_grid_according_to_the_atlas(u, beta2_e, b2, l2, w2t, mu2)
   delta_Hp, delta_Hvc, E0, eff, eff_, delta_eff, point_2_, point_t_konec = calculation_of_relative_blade_efficiency(w_1, w_2, beta_1, beta_2, c_1, u, point_0, H_0, point_2_t, w2t, psi, c_2, delta_Hc, alpha_1, alpha_2)
@@ -814,9 +814,9 @@ def determination_of_the_number_of_steps(G_0, real_p0, point_0, avg_diameter, ro
   n_stages = 11
   mass_flow = G_0 
 
-  p0 = point_t_konec
-  h0 = point_t_konec.h # kJ/kg
-  pz = 3.34 * MPa 
+  p0 = point_H4
+  h0 = point_H4.h # kJ/kg
+  pz = point_1  
 
   # Techincal params
   delta_diam = 0.2
@@ -852,11 +852,11 @@ def determination_of_the_number_of_steps(G_0, real_p0, point_0, avg_diameter, ro
   root_diameter = avg_diam_1 - blade_length_2
   if(on):
     print("Корневой диаметр = ",root_diameter)
-  point_zt = gas(P=pz * unit, s=point_0.s)
+  point_zt = gas(P=pz.P, s=point_0.s)
   full_heat_drop = h0 - point_zt.h #hp_heat_drop
   actual_heat_drop = full_heat_drop * efficiency
   hz = h0 - actual_heat_drop
-  point_z = gas(P=pz * unit, h=hz)
+  point_z = gas(P=pz.P, h=hz)
 
   # assume linearity in term of volume distribution
 
@@ -923,19 +923,19 @@ def determination_of_the_number_of_steps(G_0, real_p0, point_0, avg_diameter, ro
   return avg_diam_1, blade_length_z, avg_diam_2, root_diameter
 
 #Оценка вибрационной надежности пакета рабочих лопаток последней ступени ЦВД по возмущающим силам I рода (с построением вибрационной диаграммы) и II рода.
-def vibration_diagram(G_0, H_0, ro, point_0, rotation_speed, avg_diameter, b2, real_p0):
+def vibration_diagram(G_0, H_0, ro, point_0, point_1, rotation_speed, avg_diameter, b2, real_p0):
   u = calculation_of_circumferential_speed(avg_diameter, rotation_speed)
   Ho_c, Ho_p, h1t, c1t, a1t, M1t, F1_, point_1_t = calculation_of_parameters_for_the_nozzle(H_0, G_0, point_0, ro)       
-  alpha1_e, alpha0, t_opt, b1, f1, I1_min ,W1_min = selection_of_the_nozzle_grating_profile()
+  alpha1_e, alpha0, b1, f1, I1_min ,W1_min = selection_of_the_nozzle_grating_profile()
   el1, e_opt, l1, mu1, F1, z_1, t1opt, z1 = Clarification_nozzle_grating(c1t, G_0, F1_, avg_diameter, alpha1_e, b1, point_1_t)
   alpha_ust, b1_l1, ksi_noz, ksi_sum, ksi_end_noz, fi, fi_, delta_fi, c_1, alpha_1 = Clarification_other_nozzle_grating_parameters(mu1, c1t, alpha1_e, t1opt, l1, b1)
   w_1, beta_1, point_1_, point_2_t, w2t, l2, a2t, M2t, delta_Hc = calculation_of_parameters_for_the_selection_of_the_working_grid(l1, fi, c_1, c1t, alpha_1, u, point_1_t, Ho_p)
-  beta2_e, t_opt, b2_atl, f2, I2_min, W2_min = selection_of_the_working_grid_profile()
+  beta2_e, b2_atl, f2, I2_min, W2_min = selection_of_the_working_grid_profile()
   mu2, F2, beta2_e, z_2, t2opt, beta2_ust, b2_l2 = specification_of_working_grid_parameters(e_opt, l2, b2, G_0, point_2_t, w2t, avg_diameter)
   ksi_grid, ksi_sum_g, ksi_end_grid, psi, psi_, delta_psi, beta_2, c_2, alpha_2, w_2 = parameters_of_the_working_grid_according_to_the_atlas(u, beta2_e, b2, l2, w2t, mu2)
   delta_Hp, delta_Hvc, E0, eff, eff_, delta_eff, point_2_, point_t_konec = calculation_of_relative_blade_efficiency(w_1, w_2, beta_1, beta_2, c_1, u, point_0, H_0, point_2_t, w2t, psi, c_2, delta_Hc, alpha_1, alpha_2)
   cf, u_cf, u_cf_opt = calculation_of_the_velocity_ratio(u, H_0, fi, alpha_1, ro)  
-  avg_diam_1, blade_length_z, avg_diam_2, root_diameter = determination_of_the_number_of_steps(G_0, real_p0, point_0, avg_diameter, ro, rotation_speed, H_0, b2, False)
+  avg_diam_1, blade_length_z, avg_diam_2, root_diameter = determination_of_the_number_of_steps(G_0, real_p0, point_0, point_1, avg_diameter, ro, rotation_speed, H_0, b2, False)
 
   MPa = 1e6
   kW = 1e3
@@ -1010,8 +1010,8 @@ def vibration_diagram(G_0, H_0, ro, point_0, rotation_speed, avg_diameter, b2, r
   ax.set_title("Вибрационная диаграмма");  
 
 #расчет на прочность для диска
-def disk_strength(G_0, H_0, ro, point_0, rotation_speed, avg_diameter, b2, real_p0):
-  avg_diam_1, blade_length_z, avg_diam_2, root_diameter = determination_of_the_number_of_steps(G_0, real_p0, point_0, avg_diameter, ro, rotation_speed, H_0, b2, False)
+def disk_strength(G_0, H_0, ro, point_0, point_1, rotation_speed, avg_diameter, b2, real_p0):
+  avg_diam_1, blade_length_z, avg_diam_2, root_diameter = determination_of_the_number_of_steps(G_0, real_p0, point_0, point_1, avg_diameter, ro, rotation_speed, H_0, b2, False)
 
   MPa = 1e6
   kW = 1e3
